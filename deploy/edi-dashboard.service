@@ -1,0 +1,23 @@
+# Fait tourner le dashboard Streamlit (qui inclut déjà son propre watcher
+# interne) comme un service système redémarré automatiquement après une
+# coupure de courant.
+#
+#   sudo cp deploy/edi-dashboard.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now edi-dashboard
+
+[Unit]
+Description=EDI Dashboard (Streamlit) - Lear Corporation
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/edi_dashboard
+EnvironmentFile=/opt/edi_dashboard/.env
+ExecStart=/opt/edi_dashboard/.venv/bin/streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

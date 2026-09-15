@@ -1,0 +1,29 @@
+# Exemple de service systemd pour faire tourner le watcher EDI de façon
+# totalement autonome, avec redémarrage automatique après une coupure de
+# courant ou un crash.
+#
+# Installation (Linux) :
+#   sudo cp deploy/edi-watcher.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now edi-watcher
+#
+# Le dashboard Streamlit (app.py) démarre lui aussi son propre watcher
+# interne automatiquement : ce service systemd n'est nécessaire que si vous
+# voulez que l'ingestion continue indépendamment du cycle de vie du
+# dashboard (ex: dashboard redémarré séparément lors d'une mise à jour).
+
+[Unit]
+Description=EDI Watcher - Lear Corporation
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/edi_dashboard
+EnvironmentFile=/opt/edi_dashboard/.env
+ExecStart=/opt/edi_dashboard/.venv/bin/python run_watcher.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

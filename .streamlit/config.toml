@@ -1,0 +1,15 @@
+# Thème natif Streamlit. Contrairement à une CSS injectée avec des
+# `!important` sur `.stApp *`, ce theming natif est appliqué correctement
+# à TOUS les éléments, y compris les menus déroulants et popovers qui sont
+# rendus par Streamlit hors de `.stApp` (c'était la cause du texte
+# invisible/mal contrasté dans les listes déroulantes).
+[theme]
+base = "dark"
+primaryColor = "#3d6fd9"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#171a21"
+textColor = "#f0f0f0"
+font = "sans serif"
+
+[server]
+runOnSave = true

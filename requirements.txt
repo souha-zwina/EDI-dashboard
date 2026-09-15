@@ -1,0 +1,16 @@
+streamlit>=1.38,<2.0
+pandas>=2.2,<3.0
+numpy>=1.26,<2.0
+plotly>=5.22,<6.0
+watchdog>=4.0,<5.0
+bcrypt>=4.1,<5.0
+python-dotenv>=1.0,<2.0
+
+# Modules optionnels de prévision (le dashboard fonctionne sans, avec un
+# message explicite dans les pages Prophet / XGBoost si absents)
+xgboost>=2.0,<3.0
+scikit-learn>=1.4,<2.0
+prophet>=1.1,<2.0
+
+# Tests
+pytest>=8.0,<9.0
