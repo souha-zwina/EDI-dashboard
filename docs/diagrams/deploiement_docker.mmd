@@ -1,0 +1,21 @@
+flowchart TB
+    subgraph Host["Serveur hôte (Linux/Windows)"]
+        subgraph Container["Conteneur Docker : edi-dashboard"]
+            App["Python 3.11<br/>Streamlit + watcher intégré<br/>Port interne 8501"]
+        end
+
+        Volume[("Volume monté<br/>./data:/app/data<br/>(survit à la destruction<br/>du conteneur)")]
+        EnvFile[".env<br/>(secrets, configuration)"]
+    end
+
+    Browser(["Navigateur<br/>utilisateur"])
+    Docker["Docker Engine<br/>restart: unless-stopped"]
+
+    Browser -->|"http://serveur:8501"| Container
+    Container <-->|lecture/écriture| Volume
+    EnvFile -.->|variables d'env| Container
+    Docker -->|supervise + redémarre<br/>après coupure/crash| Container
+
+    style Container fill:#3d6fd9,color:#fff
+    style Volume fill:#3ddc84,color:#000
+    style Docker fill:#ff8c42,color:#fff

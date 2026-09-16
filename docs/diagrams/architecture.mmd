@@ -1,0 +1,49 @@
+flowchart TB
+    subgraph Sources["Sources EDI"]
+        Client["Partenaires clients<br/>(Renault, BMW, Mercedes...)"]
+        Fournisseur["Partenaires fournisseurs<br/>(CableX, Wirepro...)"]
+    end
+
+    subgraph FS["Système de fichiers"]
+        Inbound["data/edi_messages/inbound/"]
+        Outbound["data/edi_messages/outbound/"]
+    end
+
+    subgraph App["Application Streamlit (process unique)"]
+        Watcher["watcher_service.py<br/>Thread de surveillance<br/>+ auto-restart"]
+        Parser["parser_edi.py<br/>ANSI X12 / EDIFACT"]
+        Ingestion["ingestion.py<br/>Déduplication (SHA-256)<br/>Classification partenaire"]
+        Analytics["analytics.py<br/>Alertes, Prévisions,<br/>Filtrage par rôle"]
+        UI["Interface Streamlit<br/>(pages/*)"]
+        Auth["auth.py<br/>bcrypt + verrouillage"]
+    end
+
+    subgraph Storage["Persistance"]
+        DB[("SQLite (WAL)<br/>data/edi.db")]
+    end
+
+    subgraph Users["Utilisateurs"]
+        CS["Agent Customer Service"]
+        Log["Agent Logistics"]
+        Admin["Administrateur"]
+    end
+
+    Client --> Inbound
+    Fournisseur --> Outbound
+    Inbound --> Watcher
+    Outbound --> Watcher
+    Watcher --> Parser
+    Parser --> Ingestion
+    Ingestion --> DB
+    DB --> Analytics
+    Analytics --> UI
+    Auth --> UI
+    UI --> DB
+
+    CS --> Auth
+    Log --> Auth
+    Admin --> Auth
+
+    style DB fill:#3d6fd9,color:#fff
+    style Watcher fill:#ff8c42,color:#fff
+    style Auth fill:#3ddc84,color:#000

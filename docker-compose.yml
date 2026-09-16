@@ -1,0 +1,31 @@
+# docker-compose.yml - Déploiement en une commande
+# ====================================================
+#   docker compose up -d --build
+#
+# `restart: unless-stopped` = résilience aux coupures de courant : le
+# conteneur redémarre automatiquement après un crash ou un redémarrage du
+# serveur hôte, exactement comme les services systemd fournis dans deploy/
+# pour un déploiement sans conteneur.
+#
+# Le volume `./data` est monté depuis l'hôte : la base SQLite et les
+# fichiers EDI survivent à une destruction/recréation du conteneur
+# (`docker compose down && docker compose up` ne perd AUCUNE donnée).
+
+services:
+  edi-dashboard:
+    build: .
+    container_name: edi-dashboard
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./assets:/app/assets:ro
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3

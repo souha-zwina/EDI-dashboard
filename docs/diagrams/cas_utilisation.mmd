@@ -1,0 +1,48 @@
+flowchart LR
+    CS(["Agent<br/>Customer Service"])
+    Log(["Agent<br/>Logistics"])
+    Admin(["Administrateur"])
+
+    UC1(("Consulter la<br/>vue d'ensemble"))
+    UC2(("Consulter les<br/>alertes"))
+    UC3(("Prendre en charge<br/>une alerte"))
+    UC4(("Résoudre une<br/>alerte"))
+    UC5(("Consulter les<br/>prévisions"))
+    UC6(("Consulter le détail<br/>d'un partenaire"))
+    UC7(("Exporter les<br/>données"))
+    UC8(("Gérer les<br/>partenaires"))
+    UC9(("Régler les seuils<br/>d'alerte"))
+    UC10(("Gérer les<br/>utilisateurs"))
+    UC11(("Consulter le<br/>journal d'audit"))
+    UC12(("Se connecter"))
+
+    CS --> UC12
+    CS --> UC1
+    CS --> UC2
+    CS --> UC3
+    CS --> UC4
+    CS --> UC5
+    CS --> UC6
+    CS --> UC7
+
+    Log --> UC12
+    Log --> UC1
+    Log --> UC2
+    Log --> UC3
+    Log --> UC4
+    Log --> UC5
+    Log --> UC6
+    Log --> UC7
+
+    Admin --> UC12
+    Admin --> UC1
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC5
+    Admin --> UC6
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC9
+    Admin --> UC10
+    Admin --> UC11

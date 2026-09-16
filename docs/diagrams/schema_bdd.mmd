@@ -1,0 +1,68 @@
+erDiagram
+    MESSAGES {
+        integer id PK
+        text file_hash UK "SHA-256, garantit l'anti-doublon"
+        text source_file
+        text file_name
+        text standard "ANSI_X12 | EDIFACT | UNKNOWN"
+        text sender
+        text receiver
+        text message_type
+        text doc_date_parsed
+        text partner_id FK
+        text partner_type "Client | Fournisseur | Autre"
+        text sense "Inbound | Outbound"
+        integer total_forecast_qty
+        text parse_error
+        text ingested_at
+    }
+
+    PARTNERS {
+        text partner_id PK
+        text partner_type "Client | Fournisseur"
+        text display_name
+        integer active
+        text created_at
+    }
+
+    ALERT_STATUS {
+        text alert_key PK "hash stable = catégorie+partenaire+contexte"
+        text status "nouveau | en_cours | resolu"
+        text note
+        text updated_by FK
+        text updated_at
+    }
+
+    USERS {
+        text username PK
+        text password_hash "bcrypt"
+        text role
+        text display_name
+        integer failed_attempts
+        text locked_until
+    }
+
+    SETTINGS {
+        text key PK
+        text value
+    }
+
+    AUDIT_LOG {
+        integer id PK
+        text username FK
+        text action
+        text detail
+        text created_at
+    }
+
+    INGESTION_EVENTS {
+        integer id PK
+        text file_name
+        text status "ok | duplicate | error"
+        text detail
+        text created_at
+    }
+
+    PARTNERS ||--o{ MESSAGES : "classe"
+    USERS ||--o{ ALERT_STATUS : "traite"
+    USERS ||--o{ AUDIT_LOG : "génère"

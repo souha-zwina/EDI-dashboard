@@ -1,0 +1,6 @@
+# Dépendances de développement uniquement (jamais nécessaires en
+# production). Installation : pip install -r requirements-dev.txt
+-r requirements.txt
+
+pytest>=8.0,<10.0
+ruff>=0.6,<1.0

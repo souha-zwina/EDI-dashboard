@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = ["docs/", "scripts/generate_fake_edi.py"]
+
+[tool.ruff.lint]
+# F = erreurs Pyflakes (imports inutilisés, variables non définies...)
+# E, W = style PEP8 (limité au strict nécessaire, line-length gère déjà l'essentiel)
+select = ["F", "E4", "E7", "E9", "W"]

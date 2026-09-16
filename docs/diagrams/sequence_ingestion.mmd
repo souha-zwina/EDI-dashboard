@@ -1,0 +1,39 @@
+sequenceDiagram
+    actor Partenaire
+    participant FS as Dossier inbound/
+    participant W as Watcher (thread)
+    participant P as parser_edi.py
+    participant I as ingestion.py
+    participant DB as SQLite
+    participant UI as Interface (agent)
+
+    Partenaire->>FS: Dépose fichier .x12
+    activate W
+    FS-->>W: Événement "fichier créé"
+    W->>W: Attente 0.3s (fin d'écriture)
+    W->>I: ingest_file(chemin)
+    I->>I: Calcule le hash SHA-256
+    I->>DB: file_hash_exists(hash) ?
+
+    alt Fichier déjà connu
+        DB-->>I: True
+        I-->>W: (False, "duplicate")
+    else Nouveau fichier
+        DB-->>I: False
+        I->>P: parse_edi_file(chemin)
+        P->>P: Détecte standard (ANSI X12 / EDIFACT)
+        P->>P: Extrait segments + champs
+        P-->>I: Enregistrement structuré
+        I->>DB: partner_type_map()
+        DB-->>I: {BMWDEU01: "Client", ...}
+        I->>I: Classifie partenaire + calcule quantités
+        I->>DB: insert_message(enregistrement)
+        I->>DB: log_ingestion_event("ok")
+        I-->>W: (True, "ok")
+    end
+    deactivate W
+
+    Note over UI: Rafraîchissement automatique<br/>(cache 15s) ou manuel
+    UI->>DB: fetch_all_messages() + build_alerts()
+    DB-->>UI: Messages + alertes recalculées
+    UI-->>Partenaire: (indirect) Alerte visible<br/>si anomalie détectée
