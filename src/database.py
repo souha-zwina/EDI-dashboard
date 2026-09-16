@@ -22,8 +22,7 @@ import sqlite3
 import threading
 from contextlib import contextmanager
 from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from . import config
 

@@ -5,7 +5,6 @@ déduplication et la persistance fonctionnent réellement."""
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 
 
 def _fake_record(file_hash: str, partner_id: str = "BMWDEU01") -> dict:
